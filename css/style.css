@@ -31,7 +31,7 @@ body {
 
 .number-view .current-number {
   float: right;
-  padding: 0.3em 0.2em 0em 0em;
+  padding: 0.3em 0.5em 0em 0em;
   font-size: 26px;
   text-shadow: 2px 2px 2px black;
 }
