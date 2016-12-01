@@ -1,3 +1,5 @@
+//TODO: prevent user from inputing two operations in a row
+
 //wrapped in an IIFE to keep global scope clean
 (function calculatorEvents(){
   //NUMBER EVENTS

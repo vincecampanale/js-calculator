@@ -73,6 +73,11 @@ body {
   opacity: 0.7;
 }
 
+#AC,
+#CE {
+  background-color: #32CD32;
+  color: black;
+}
 
 
 /* below code gives rounded top/bottom to entire calculator and buttons*/
