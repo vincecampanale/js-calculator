@@ -64,44 +64,34 @@
   minusButton.addEventListener("click", function(){pushOperation("-")});
 
   var timesButton = document.getElementById("times");
-  timesButton.addEventListener("click", function(){pushOperation("x")});
+  timesButton.addEventListener("click", function(){pushOperation("*")});
 
   var divideButton = document.getElementById("over");
-  divideButton.addEventListener("click", function(){pushOperation("")})
+  divideButton.addEventListener("click", function(){pushOperation("\u00f7")})
 
   var equalsButton = document.getElementById("equals");
   equalsButton.addEventListener("click", function(){evaluateEquation()});
 
 })();
 
-//pushes the current number and the pressed operation onto the current equation
-//clears the current number
+//pushes the current number and the pressed operation onto the current equation, clears displayed number
 function pushOperation(operation) {
   var currentEquationArr = getCurrentEquationAsArray();
   var currentNumber = getCurrentNumber();
-
-  if(operation == "+"){
-    currentEquationArr.push(currentNumber);
-    currentEquationArr.push("+");
-    generateCurrentEquation(currentEquationArr);
-    resetDisplay();
-  }
-
-  if(operation == "-"){
-
-  }
-  if(operation == "x"){
-
-  }
-  if(operation == "&divide;"){
-
-  }
-
+  currentEquationArr.push(currentNumber);
+  currentEquationArr.push(operation);
+  generateCurrentEquation(currentEquationArr);
+  resetDisplay();
 }
 
 //evaluates the current equation
 function evaluateEquation() {
+  var currentEquationArr = getCurrentEquationAsArray();
+  console.log(currentEquationArr);
+  pushOperation("=");
 
+  //logic here to evaluate the expression in "current-equation" as an equation
+    //then push the answer onto the end of current-equation and display it in current-number
 }
 
 
@@ -116,7 +106,6 @@ function handleDot(){
   }
   generateCurrentNumber(numArray);
 }
-
 //handles the negative sign (making the presented number negative) and its edge cases
 function handleNegative(){
   //TODO: Solve edge case - user makes it negative when it's 4. so it becomes -4.0,
@@ -134,7 +123,6 @@ function handleNegative(){
     generateCurrentNumber(numArray);
   }
 }
-
 //pushes a number onto the currently displayed number
 function pushNumber(num){
   var numArray = getCurrentNumberAsArray();
@@ -143,12 +131,21 @@ function pushNumber(num){
 }
 
 
-//HELPER FUNCTIONS
+//~~~~~~~~~~~HELPER FUNCTIONS~~~~~~~~~~~
+
+//resets the number view display
+function resetDisplay(){
+  var node = document.getElementById("currentNumber");
+  node.innerHTML = [];
+}
+//        number getters/setters
+//get current number as a string
 function getCurrentNumber(){
   var node = document.getElementById("currentNumber");
   var number = node.innerHTML.trim();
   return number;
 }
+//get current number as an array
 function getCurrentNumberAsArray(){
   var currentNumber = getCurrentNumber();
   var numArray = currentNumber.split("");
@@ -161,13 +158,14 @@ function generateCurrentNumber(arr){
   node.innerHTML = newDisplay;
 }
 
-function resetDisplay(){
-  var node = document.getElementById("currentNumber");
-  node.innerHTML = [];
+//        equation getters/setters
+//get current equation as a string
+function getCurrentEquation(){
+  var node = document.getElementById("currentEquation");
+  var currentEquation = node.innerHTML;
+  return currentEquation;
 }
-
-
-
+//get current equation as an array
 function getCurrentEquationAsArray(){
   var node = document.getElementById("currentEquation");
   var currentEquation = node.innerHTML;
@@ -177,7 +175,7 @@ function getCurrentEquationAsArray(){
   }
   return [];
 }
-//takes an array and loads it into the current-equation
+//takes an array and loads it into current-equation
 function generateCurrentEquation(arr){
   var newDisplay = arr.join("");
   var node = document.getElementById("currentEquation");
