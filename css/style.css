@@ -1,5 +1,6 @@
 body {
-  background: lightgrey;
+  background: black;
+  /*background: lightgrey;*/
   font-family: 'Bungee', cursive;
   color: #32CD32;
 }
@@ -47,7 +48,7 @@ body {
   float: left;
   height: 12%;
   width: 15%;
-  margin: 0.1em 0.3em 0.5em 0.8em;
+  margin: 0.1em 0.3em 0.5em 0.76em;
   padding: 0.5em 0.1em 0em 0.1em;
   text-align: center;
   font-size: 22px;
@@ -62,6 +63,7 @@ body {
 
 
 
+/* below code gives rounded top/bottom to entire calculator and buttons*/
 .small-curved-bottom {
   -moz-border-radius-bottomleft: 100%10px;
   -webkit-border-bottom-left-radius: 100%10px;
