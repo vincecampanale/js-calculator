@@ -12,96 +12,100 @@
     //when user presses '=', store the second number in another variable and run the operation
     //output result of operation to the number view
 
-// When the +/- sign is pressed:
-  //If current-number contains a positive value, tack on a negative to the front of current-number
-  //If current-number contains a negative value, remove the negative sign in front of current-number
-  //If current-number is empty, do nothing
 
-
-//TODO: get operation out of global scope ******** VERY IMPORTANT
-var operation = [];
-
-(function operationEvents(){
-
-  var currentNumber = 0;
-    //use operation variable to store whichever operation goes down when equals button is pressed
-    //**clear operation variable every time equals function fires
-
-
-  var addButton = document.getElementById("add");
-  addButton.addEventListener("click", function(){add()});
-
-  var equalsButton = document.getElementById("equals");
-  equalsButton.addEventListener("click", function(){equals()});
-
-  function add(){
-    if(operation.length > 1){
-      equals();
-    }
-
-    currentNumber = getCurrentNumber();
-    var numAsFloat = parseFloat(currentNumber);
-    operation.push("+");
-
-    console.log(numAsFloat);
-
-  }
-
-  function equals(){
-    if(operation[operation.length - 1] === "+"){
-      var numberToAdd = parseFloat(getCurrentNumber());
-      currentNumber = parseFloat(currentNumber) + numberToAdd;
-      generateDisplay([currentNumber]);
-    }
-
-    operation.splice(0, operation.length-1);
-  }
-})();
-
-
-
-
-
-
-
+//TODO: Maximum number of digits allowed in current number div is 9
 
 
 //add event listeners to relevant numbers and symbols. wrapped in an IIFE to keep global scope clean
-(function numberEvents(){
+(function calculatorEvents(){
+  //NUMBER EVENTS
   var one = document.getElementById("1");
-  var two = document.getElementById("2");
-  var three = document.getElementById("3");
-  var four = document.getElementById("4");
-  var five = document.getElementById("5");
-  var six = document.getElementById("6");
-  var seven = document.getElementById("7");
-  var eight = document.getElementById("8");
-  var nine = document.getElementById("9");
-  var zero = document.getElementById("0");
   one.addEventListener("click", function(){pushNumber(1)});
+
+  var two = document.getElementById("2");
   two.addEventListener("click", function(){pushNumber(2)});
+
+  var three = document.getElementById("3");
   three.addEventListener("click", function(){pushNumber(3)});
+
+  var four = document.getElementById("4");
   four.addEventListener("click", function(){pushNumber(4)});
+
+  var five = document.getElementById("5");
   five.addEventListener("click", function(){pushNumber(5)});
+
+  var six = document.getElementById("6");
   six.addEventListener("click", function(){pushNumber(6)});
+
+  var seven = document.getElementById("7");
   seven.addEventListener("click", function(){pushNumber(7)});
+
+  var eight = document.getElementById("8");
   eight.addEventListener("click", function(){pushNumber(8)});
+
+  var nine = document.getElementById("9");
   nine.addEventListener("click", function(){pushNumber(9)});
+
+  var zero = document.getElementById("0");
   zero.addEventListener("click", function(){pushNumber(0)});
 
   var dot = document.getElementById("dot");
-  var negative = document.getElementById("negative");
   dot.addEventListener("click", function(){handleDot()});
+
+  var negative = document.getElementById("negative");
   negative.addEventListener("click", function(){handleNegative()});
+
+
+  //OPERATION EVENTS
+  var addButton = document.getElementById("plus");
+  addButton.addEventListener("click", function(){pushOperation("+")});
+
+  var minusButton = document.getElementById("minus");
+  minusButton.addEventListener("click", function(){pushOperation("-")});
+
+  var timesButton = document.getElementById("times");
+  timesButton.addEventListener("click", function(){pushOperation("x")});
+
+  var divideButton = document.getElementById("over");
+  divideButton.addEventListener("click", function(){pushOperation("")})
+
+  var equalsButton = document.getElementById("equals");
+  equalsButton.addEventListener("click", function(){evaluateEquation()});
+
 })();
 
+//pushes the current number and the pressed operation onto the current equation
+//clears the current number
+function pushOperation(operation) {
+  var currentEquationArr = getCurrentEquationAsArray();
+  var currentNumber = getCurrentNumber();
 
-function generateDisplay(arr){
-  var newDisplay = arr.join("");
-  var node = document.getElementById("currentNumber");
-  node.innerHTML = newDisplay;
+  if(operation == "+"){
+    currentEquationArr.push(currentNumber);
+    currentEquationArr.push("+");
+    generateCurrentEquation(currentEquationArr);
+    resetDisplay();
+  }
+
+  if(operation == "-"){
+
+  }
+  if(operation == "x"){
+
+  }
+  if(operation == "&divide;"){
+
+  }
+
 }
 
+//evaluates the current equation
+function evaluateEquation() {
+
+}
+
+
+//handles the decimal point and its edge cases
 function handleDot(){
   var numArray = getCurrentNumberAsArray();
   //number can only contain one decimal point maximum
@@ -110,9 +114,10 @@ function handleDot(){
   } else {
     numArray.push(".");
   }
-  generateDisplay(numArray);
+  generateCurrentNumber(numArray);
 }
 
+//handles the negative sign (making the presented number negative) and its edge cases
 function handleNegative(){
   //TODO: Solve edge case - user makes it negative when it's 4. so it becomes -4.0,
   // then tries to make it -4.1 but can't because of the 0
@@ -122,19 +127,21 @@ function handleNegative(){
   }
   if(numArray[0] == "-"){
     numArray.splice(0, 1);
-    generateDisplay(numArray);
+    generateCurrentNumber(numArray);
     return;
   } else {
     numArray.unshift("-");
-    generateDisplay(numArray);
+    generateCurrentNumber(numArray);
   }
 }
 
+//pushes a number onto the currently displayed number
 function pushNumber(num){
   var numArray = getCurrentNumberAsArray();
   numArray.push(num);
-  generateDisplay(numArray);
+  generateCurrentNumber(numArray);
 }
+
 
 //HELPER FUNCTIONS
 function getCurrentNumber(){
@@ -142,9 +149,37 @@ function getCurrentNumber(){
   var number = node.innerHTML.trim();
   return number;
 }
-
 function getCurrentNumberAsArray(){
   var currentNumber = getCurrentNumber();
   var numArray = currentNumber.split("");
   return numArray;
+}
+//takes an array and loads it into current-number
+function generateCurrentNumber(arr){
+  var newDisplay = arr.join("");
+  var node = document.getElementById("currentNumber");
+  node.innerHTML = newDisplay;
+}
+
+function resetDisplay(){
+  var node = document.getElementById("currentNumber");
+  node.innerHTML = [];
+}
+
+
+
+function getCurrentEquationAsArray(){
+  var node = document.getElementById("currentEquation");
+  var currentEquation = node.innerHTML;
+  if(currentEquation !== ""){
+    var eqArray = currentEquation.split("");
+    return eqArray;
+  }
+  return [];
+}
+//takes an array and loads it into the current-equation
+function generateCurrentEquation(arr){
+  var newDisplay = arr.join("");
+  var node = document.getElementById("currentEquation");
+  node.innerHTML = newDisplay;
 }

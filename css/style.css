@@ -24,18 +24,30 @@ body {
 
 .number-view {
   width: 80%;
-  height: 10%;
+  height: 12%;
   margin: 0.5em auto 0.7em auto;
   border-radius: 10px;
   background-color: #d3d3d3;
 }
 
 .number-view .current-number {
-  float: right;
-  padding: 0.3em 0.5em 0em 0em;
-  font-size: 26px;
+  padding: 0.3em 0.3em 0em 0em;
+  font-size: 24px;
   text-shadow: 2px 2px 2px black;
+  float: right;
 }
+
+.number-view .current-equation {
+  margin-left: 0.5em;
+  padding: 0.1em 0.2em;
+  font-size: 10px;
+  color: black;
+  position: relative;
+  bottom: 0;
+  display: block;
+}
+
+
 
 .buttons-frame {
   width: 80%;
