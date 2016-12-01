@@ -47,14 +47,11 @@ body {
   display: block;
 }
 
-
-
 .buttons-frame {
   width: 80%;
   height: 68%;
   margin: 0.5em auto;
 }
-
 
 .buttons-frame .button {
   float: left;
@@ -77,6 +74,11 @@ body {
 #CE {
   background-color: #32CD32;
   color: black;
+  width: 27%;
+}
+
+#percent {
+  display: none;
 }
 
 

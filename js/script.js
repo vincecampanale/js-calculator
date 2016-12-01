@@ -60,7 +60,6 @@
 
   var clearCurrent = document.getElementById("CE");
   clearCurrent.addEventListener("click", function(){resetCurrentNumberDisplay();});
-
 })();
 
 // ~~~~~~~~~~~FUNCTIONS~~~~~~~~~~~~
@@ -73,6 +72,11 @@ function pushOperation(operation) {
   //if currentNumber is empty, return (this prevents two operations in a row)
   if(currentNumber === ""){
     return;
+  }
+
+  //if currentNumber ends with a hanging decimal, remove the decimal
+  if(currentNumber[currentNumber.length - 1] === "."){
+    currentNumber = currentNumber.substring(0, currentNumber.length-1);
   }
 
   //if the equation has been evaluated,
@@ -135,6 +139,7 @@ function handleDot(){
 
   setCurrentNumber(numArray);
 }
+
 //handles the negative sign (making the presented number negative) and its edge cases
 function handleNegative(){
   //TODO: Solve edge case - user makes it negative when it's 4. so it becomes -4.0,
@@ -147,11 +152,16 @@ function handleNegative(){
   if(numArray[0] == "-"){
     numArray.splice(0, 1);
     setCurrentNumber(numArray);
-    return;
   } else {
     numArray.unshift("-");
     setCurrentNumber(numArray);
   }
+
+  var currentEquationArr = getCurrentEquationAsArray();
+  if (currentEquationArr.indexOf("=") !== -1){
+    resetCurrentEquationDisplay();
+  }
+
 }
 
 //pushes a number onto the currently displayed number
