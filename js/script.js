@@ -67,7 +67,7 @@
   timesButton.addEventListener("click", function(){pushOperation("*")});
 
   var divideButton = document.getElementById("over");
-  divideButton.addEventListener("click", function(){pushOperation("\u00f7")})
+  divideButton.addEventListener("click", function(){pushOperation("/")})
 
   var equalsButton = document.getElementById("equals");
   equalsButton.addEventListener("click", function(){evaluateEquation()});
@@ -78,20 +78,34 @@
 function pushOperation(operation) {
   var currentEquationArr = getCurrentEquationAsArray();
   var currentNumber = getCurrentNumber();
+
+  //if the equation has been evaluated,
+  //wipe the current equation and start again with whatever number is currently displayed (ans from prev. equation)
+  if(currentEquationArr.indexOf("=") !== -1){
+    currentEquationArr = [];
+  }
+
   currentEquationArr.push(currentNumber);
   currentEquationArr.push(operation);
-  generateCurrentEquation(currentEquationArr);
+  setCurrentEquation(currentEquationArr);
   resetDisplay();
 }
 
 //evaluates the current equation
 function evaluateEquation() {
   var currentEquationArr = getCurrentEquationAsArray();
-  console.log(currentEquationArr);
-  pushOperation("=");
-
-  //logic here to evaluate the expression in "current-equation" as an equation
-    //then push the answer onto the end of current-equation and display it in current-number
+  var currentNumber = getCurrentNumber();
+  currentEquationArr.push(currentNumber);
+  var currentEquation = currentEquationArr.join('');
+  var ans = eval(currentEquation);
+  ans = ans.toString();
+  if(ans.length > 9){
+    ans = ans.substring(0, 9);
+  }
+  currentEquationArr.push("=", ans);
+  setCurrentEquation(currentEquationArr);
+  var numDisplay = document.getElementById("currentNumber");
+  numDisplay.innerHTML = ans;
 }
 
 
@@ -104,7 +118,7 @@ function handleDot(){
   } else {
     numArray.push(".");
   }
-  generateCurrentNumber(numArray);
+  setCurrentNumber(numArray);
 }
 //handles the negative sign (making the presented number negative) and its edge cases
 function handleNegative(){
@@ -116,18 +130,18 @@ function handleNegative(){
   }
   if(numArray[0] == "-"){
     numArray.splice(0, 1);
-    generateCurrentNumber(numArray);
+    setCurrentNumber(numArray);
     return;
   } else {
     numArray.unshift("-");
-    generateCurrentNumber(numArray);
+    setCurrentNumber(numArray);
   }
 }
 //pushes a number onto the currently displayed number
 function pushNumber(num){
   var numArray = getCurrentNumberAsArray();
   numArray.push(num);
-  generateCurrentNumber(numArray);
+  setCurrentNumber(numArray);
 }
 
 
@@ -152,7 +166,7 @@ function getCurrentNumberAsArray(){
   return numArray;
 }
 //takes an array and loads it into current-number
-function generateCurrentNumber(arr){
+function setCurrentNumber(arr){
   var newDisplay = arr.join("");
   var node = document.getElementById("currentNumber");
   node.innerHTML = newDisplay;
@@ -176,7 +190,7 @@ function getCurrentEquationAsArray(){
   return [];
 }
 //takes an array and loads it into current-equation
-function generateCurrentEquation(arr){
+function setCurrentEquation(arr){
   var newDisplay = arr.join("");
   var node = document.getElementById("currentEquation");
   node.innerHTML = newDisplay;
