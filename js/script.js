@@ -1,5 +1,3 @@
-//TODO: prevent user from inputing two operations in a row
-
 //wrapped in an IIFE to keep global scope clean
 (function calculatorEvents(){
   //NUMBER EVENTS
@@ -72,10 +70,20 @@ function pushOperation(operation) {
   var currentEquationArr = getCurrentEquationAsArray();
   var currentNumber = getCurrentNumber();
 
+  //if currentNumber is empty, return (this prevents two operations in a row)
+  if(currentNumber === ""){
+    return;
+  }
+
   //if the equation has been evaluated,
   //wipe the current equation and start again with whatever number is currently displayed (ans from prev. equation)
   if(currentEquationArr.indexOf("=") !== -1){
     currentEquationArr = [];
+  }
+
+  //if current number is negative, put parentheses around it
+  if(currentNumber < 0){
+    currentNumber = "(" + currentNumber + ")";
   }
 
   currentEquationArr.push(currentNumber);
@@ -88,12 +96,15 @@ function pushOperation(operation) {
 function evaluateEquation() {
   var currentEquationArr = getCurrentEquationAsArray();
   var currentNumber = getCurrentNumber();
+  if(currentNumber < 0){
+    currentNumber = "(" + currentNumber + ")";
+  }
   currentEquationArr.push(currentNumber);
   var currentEquation = currentEquationArr.join('');
   var ans = eval(currentEquation);
   ans = ans.toString();
-  if(ans.length > 9){
-    ans = ans.substring(0, 9);
+  if(ans.length > 8){
+    ans = ans.substring(0, 7);
   }
   currentEquationArr.push("=", ans);
   setCurrentEquation(currentEquationArr);
@@ -105,12 +116,23 @@ function evaluateEquation() {
 //handles the decimal point and its edge cases
 function handleDot(){
   var numArray = getCurrentNumberAsArray();
+  var currentNumber = getCurrentNumber();
+
   //number can only contain one decimal point maximum
   if(numArray.indexOf(".") >= 0){
     return;
-  } else {
+  }
+
+  //if current number is empty, add a 0 before the decimal point
+  if(currentNumber === "" || currentNumber === "-"){
+    numArray.push("0", ".");
+  }
+
+  //if number is not empty and there is not a decimal point, just add the decimal
+  if((currentNumber !== "") && (numArray.indexOf(".") < 0)) {
     numArray.push(".");
   }
+
   setCurrentNumber(numArray);
 }
 //handles the negative sign (making the presented number negative) and its edge cases
