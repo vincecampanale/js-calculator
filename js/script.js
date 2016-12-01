@@ -1,22 +1,4 @@
-// Things the calculator must do:
-// When a NUMBER is pressed:
-  // if the current-number is empty, add the pressed number the view
-  // if current-number is not empty, tack the pressed number onto the end of whatever is in the view
-    // UNLESS an operation was just completed: then clear the view and set current-number to the number that was just pressed
-
-// When an OPERATION (+ , -, x, /) is pressed:
-  // if current-number is empty, do nothing
-  // if current-number contains a value, store that value in a variable and clear the number view
-    // (also store which operation is being done)
-    // allow the user to input the next number
-    //when user presses '=', store the second number in another variable and run the operation
-    //output result of operation to the number view
-
-
-//TODO: Maximum number of digits allowed in current number div is 9
-
-
-//add event listeners to relevant numbers and symbols. wrapped in an IIFE to keep global scope clean
+//wrapped in an IIFE to keep global scope clean
 (function calculatorEvents(){
   //NUMBER EVENTS
   var one = document.getElementById("1");
@@ -72,7 +54,16 @@
   var equalsButton = document.getElementById("equals");
   equalsButton.addEventListener("click", function(){evaluateEquation()});
 
+  //CLEAR EVENTS
+  var allClear = document.getElementById("AC");
+  allClear.addEventListener("click", function(){resetCurrentNumberDisplay(); resetCurrentEquationDisplay();});
+
+  var clearCurrent = document.getElementById("CE");
+  clearCurrent.addEventListener("click", function(){resetCurrentNumberDisplay();});
+
 })();
+
+// ~~~~~~~~~~~FUNCTIONS~~~~~~~~~~~~
 
 //pushes the current number and the pressed operation onto the current equation, clears displayed number
 function pushOperation(operation) {
@@ -88,7 +79,7 @@ function pushOperation(operation) {
   currentEquationArr.push(currentNumber);
   currentEquationArr.push(operation);
   setCurrentEquation(currentEquationArr);
-  resetDisplay();
+  resetCurrentNumberDisplay();
 }
 
 //evaluates the current equation
@@ -125,6 +116,7 @@ function handleNegative(){
   //TODO: Solve edge case - user makes it negative when it's 4. so it becomes -4.0,
   // then tries to make it -4.1 but can't because of the 0
   var numArray = getCurrentNumberAsArray();
+  //to avoid hanging '.' -- if statement converts 4. to 4.0 if user wants to change from positive to negative
   if(numArray[numArray.length-1] === "."){
     numArray.push(0);
   }
@@ -137,19 +129,28 @@ function handleNegative(){
     setCurrentNumber(numArray);
   }
 }
+
 //pushes a number onto the currently displayed number
 function pushNumber(num){
+  var currentEquationArr = getCurrentEquationAsArray();
+  if(currentEquationArr.indexOf("=") !== -1){
+    resetCurrentNumberDisplay();
+    resetCurrentEquationDisplay();
+  }
   var numArray = getCurrentNumberAsArray();
   numArray.push(num);
   setCurrentNumber(numArray);
 }
 
-
 //~~~~~~~~~~~HELPER FUNCTIONS~~~~~~~~~~~
 
 //resets the number view display
-function resetDisplay(){
+function resetCurrentNumberDisplay(){
   var node = document.getElementById("currentNumber");
+  node.innerHTML = [];
+}
+function resetCurrentEquationDisplay(){
+  var node = document.getElementById("currentEquation");
   node.innerHTML = [];
 }
 //        number getters/setters
